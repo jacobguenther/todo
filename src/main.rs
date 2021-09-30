@@ -1,3 +1,6 @@
+// File: src/main.rs
+// License: GPLv3
+
 use std::env;
 
 fn main() {

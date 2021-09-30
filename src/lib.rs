@@ -1,3 +1,6 @@
+// File: src/lib.rs
+// License: GPLv3
+
 use colored::*;
 use std::fs::OpenOptions;
 use std::io::prelude::Read;
