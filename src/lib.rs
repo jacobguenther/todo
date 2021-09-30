@@ -49,7 +49,7 @@ impl Todo {
         // This loop will repeat itself for each taks in TODO file
         for (number, task) in self.todo.iter().enumerate() {
             if task.len() > 5 {
-                // Converts virgin default number into a chad BOLD string
+                // Converts number into BOLD string
                 let number = (number + 1).to_string().bold();
 
                 // Saves the symbol of current task
@@ -71,7 +71,6 @@ impl Todo {
         }
     }
 
-    // This one is for yall, dmenu chads <3
     pub fn raw(&self, arg: &[String]) {
         if arg.len() > 1 {
             eprintln!("todo raw takes only 1 argument, not {}", arg.len())
