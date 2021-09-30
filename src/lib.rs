@@ -61,9 +61,6 @@ fn read_contents() -> String {
 		.expect("Couldn't read todofile");
 	contents
 }
-fn read_todos() -> Vec<String> {
-	read_contents().lines().map(|s| s.to_owned()).collect()
-}
 
 pub fn list() {
 	let mut print_buffer = String::new();
@@ -137,13 +134,15 @@ pub fn remove(args: &[String]) {
 			.expect("Couldn't write error to stderr 'todo rm takes at least 1 argument");
 		process::exit(1);
 	} else {
-		let todos: Vec<_> = read_todos();
+		let contents = read_contents();
+
+		// Opens the TODO file with a permission to:
 		let write = true;
 		let truncate = true;
 		let todofile = get_todofile(false, write, false, truncate, false);
 		let mut buffer = BufWriter::new(todofile);
 
-		for (pos, line) in todos.iter().enumerate() {
+		for (pos, line) in contents.lines().enumerate() {
 			let index_str = (pos + 1).to_string();
 			if args.contains(&index_str) {
 				continue;
