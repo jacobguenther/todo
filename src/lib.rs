@@ -5,6 +5,7 @@ use colored::*;
 use std::fs::OpenOptions;
 use std::io::prelude::Read;
 use std::io::{
+	self,
 	BufReader,
 	BufWriter,
 	Write,
@@ -89,12 +90,16 @@ pub fn list() {
 		}
 		print_buffer.push('\n');
 	}
-	println!("{}", print_buffer)
+	io::stdout()
+		.write_all(&print_buffer.as_bytes())
+		.expect("Couldn't print todo to stdout");
 }
 
 pub fn add(args: &[String]) {
 	if args.is_empty() {
-		eprintln!("todo add takes at least 1 argument");
+		io::stderr()
+			.write_all(b"todo add takes at least 1 argument")
+			.expect("Couldn't write error to stderr 'todo add takes at least 1 argument'");
 		process::exit(1);
 	} else {
 		let read = true;
@@ -118,14 +123,18 @@ pub fn add(args: &[String]) {
 				.expect("unable to write data");
 		}
 
-		// Appends a new task/s to the file
+		buffer
+			.flush()
+			.expect("Failed to flush write buffer before dropping");
 	}
 }
 
 // Removes a task
 pub fn remove(args: &[String]) {
 	if args.is_empty() {
-		eprintln!("todo rm takes at least 1 argument");
+		io::stderr()
+			.write_all(b"todo rm takes at least 1 argument")
+			.expect("Couldn't write error to stderr 'todo rm takes at least 1 argument");
 		process::exit(1);
 	} else {
 		let todos: Vec<_> = read_todos();
@@ -147,6 +156,10 @@ pub fn remove(args: &[String]) {
 				.write_all(line.as_bytes())
 				.expect("unable to write data");
 		}
+
+		buffer
+			.flush()
+			.expect("Failed to flush write buffer before dropping");
 	}
 }
 
@@ -155,9 +168,7 @@ pub fn sort() {
 	let mut todo = String::new();
 	let mut done = String::new();
 
-	let todos: Vec<_> = read_todos();
-
-	for line in todos.iter() {
+	for line in read_contents().lines() {
 		if line.len() >= 5 {
 			let (symbol, _) = symbol_and_task(line);
 			if symbol == NOT_DONE_SYMBOL {
@@ -170,32 +181,37 @@ pub fn sort() {
 		}
 	}
 
+	todo.push_str(&done);
+
 	// Opens the TODO file with a permission to:
 	let write = true;
 	let truncate = true;
 	let mut todofile = get_todofile(false, write, false, truncate, false);
 
-	todo.push_str(&done);
-
 	// Writes contents of a todo variable into the TODO file
 	todofile
 		.write_all(todo.as_bytes())
 		.expect("Error while trying to save the todofile");
+
+	todofile
+		.flush()
+		.expect("Failed to flush write buffer before dropping");
 }
 
 pub fn done(args: &[String]) {
 	if args.is_empty() {
-		eprintln!("todo done takes at least 1 argument");
+		io::stderr()
+			.write_all(b"todo done takes at least 1 argument")
+			.expect("Couldn't write error to stderr 'todo done takes at least 1 argument");
 		process::exit(1);
 	} else {
-		let todos = read_todos();
 		// Opens the TODO file with a permission to overwrite it
 		let write = true;
 		let todofile = get_todofile(false, write, false, false, false);
 		let mut buffer = BufWriter::new(todofile);
 
 		let mut line_buffer = String::new();
-		for (pos, line) in todos.iter().enumerate() {
+		for (pos, line) in read_contents().lines().enumerate() {
 			if line.len() >= 5 {
 				let (symbol, task) = symbol_and_task(line);
 
@@ -228,6 +244,9 @@ pub fn done(args: &[String]) {
 				}
 			}
 		}
+		buffer
+			.flush()
+			.expect("Failed to flush write buffer before dropping");
 	}
 }
 
@@ -257,5 +276,7 @@ Available commands:
 
 pub fn help() {
 	// For readability
-	println!("{}", TODO_HELP);
+	io::stdout()
+		.write_all(&TODO_HELP.as_bytes())
+		.expect("Couldn't print help to stdout");
 }
