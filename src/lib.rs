@@ -65,15 +65,15 @@ fn read_contents() -> String {
 pub fn list() {
 	let mut print_buffer = String::new();
 
-	for (number, line) in read_contents().lines().enumerate() {
+	for (i, line) in read_contents().lines().enumerate() {
 		// Converts number into BOLD string
-		let number = (number + 1).to_string().bold();
+		let pos = (i + 1).to_string().bold().to_string();
 
 		// Saves the symbol of current task
 		// Saves a task without a symbol
 		let (symbol, task) = symbol_and_task(line);
 
-		print_buffer.push_str(&number);
+		print_buffer.push_str(&pos);
 		print_buffer.push(' ');
 		// Checks if the current task is completed or not...
 		if symbol == DONE_SYMBOL {
