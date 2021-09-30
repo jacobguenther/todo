@@ -67,13 +67,13 @@ pub fn list() {
 
 	for (i, line) in read_contents().lines().enumerate() {
 		// Converts number into BOLD string
-		let pos = (i + 1).to_string().bold().to_string();
+		let number = (i + 1).to_string().bold().to_string();
 
 		// Saves the symbol of current task
 		// Saves a task without a symbol
 		let (symbol, task) = symbol_and_task(line);
 
-		print_buffer.push_str(&pos);
+		print_buffer.push_str(&number);
 		print_buffer.push(' ');
 		// Checks if the current task is completed or not...
 		if symbol == DONE_SYMBOL {
