@@ -88,7 +88,7 @@ pub fn list() {
 		print_buffer.push('\n');
 	}
 	io::stdout()
-		.write_all(&print_buffer.as_bytes())
+		.write_all(print_buffer.as_bytes())
 		.expect("Couldn't print todo to stdout");
 }
 
@@ -218,7 +218,7 @@ pub fn done(args: &[String]) {
 				if args.contains(&index_str) {
 					if symbol == NOT_DONE_SYMBOL {
 						line_buffer.push_str(DONE_SYMBOL);
-						line_buffer.push_str(&task);
+						line_buffer.push_str(task);
 						line_buffer.push('\n');
 						buffer
 							.write_all(line_buffer.as_bytes())
@@ -226,7 +226,7 @@ pub fn done(args: &[String]) {
 						line_buffer.clear();
 					} else if symbol == DONE_SYMBOL {
 						line_buffer.push_str(NOT_DONE_SYMBOL);
-						line_buffer.push_str(&task);
+						line_buffer.push_str(task);
 						line_buffer.push('\n');
 						buffer
 							.write_all(line_buffer.as_bytes())
@@ -234,7 +234,7 @@ pub fn done(args: &[String]) {
 						line_buffer.clear();
 					}
 				} else if symbol == NOT_DONE_SYMBOL || symbol == DONE_SYMBOL {
-					line_buffer.push_str(&line);
+					line_buffer.push_str(line);
 					line_buffer.push('\n');
 					buffer
 						.write_all(line_buffer.as_bytes())
@@ -276,6 +276,6 @@ Available commands:
 pub fn help() {
 	// For readability
 	io::stdout()
-		.write_all(&TODO_HELP.as_bytes())
+		.write_all(TODO_HELP.as_bytes())
 		.expect("Couldn't print help to stdout");
 }
