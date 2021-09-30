@@ -81,8 +81,7 @@ pub fn list() {
 		if symbol == DONE_SYMBOL {
 			// DONE
 			// If the task is completed, then it prints it with a strikethrough
-			let s = format!("{}", task.strikethrough());
-			print_buffer.push_str(&s);
+			print_buffer.push_str(&task.strikethrough().to_string());
 		} else if symbol == NOT_DONE_SYMBOL {
 			// NOT DONE
 			// If the task is not completed yet, then it will print it as it is
